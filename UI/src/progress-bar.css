@@ -1,0 +1,83 @@
+.progress-bars {
+    padding-top: 400px;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    position: relative;
+}
+
+.progress-bar {
+    margin: auto;
+    display: flex;
+    justify-content: center;
+    width: 300px;
+    height: 300px;
+}
+
+.progress-bar .CircularProgressbar-path {
+  stroke: #00bcd4;
+}
+
+.progress-bar .CircularProgressbar-text {
+  fill: #333;
+  font-size: 20px;
+  text-align: middle;
+  text-anchor: middle;
+}
+
+.progress-bar .CircularProgressbar-trail {
+  stroke: #d6d6d6;
+}
+
+.progress-bars p {
+    text-align: center;
+    font-size: 35px;
+}
+  
+.image {
+    position: absolute; 
+    top: 15%; 
+    left: 50%; 
+    transform: translate(-50%, -50%); 
+    z-index: 1; 
+    width: 300px; 
+    height: 300px; 
+  }
+
+.popup {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: white;
+    color: #333;
+    border-radius: 5px;
+    padding: 20px;
+    border: 2px solid #ccc;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.5);
+    width: 1200px;
+    height: 1200px;
+}
+
+.popup button {
+    position: absolute;
+    right: 0;
+    top: 0;
+    font-size: 30px;
+}
+
+.button {
+    position: fixed;
+    bottom: 80px;
+    right: 500px;
+    width: 200px;
+    height: 100px;
+    color: white;
+    background-color: #00bcd4;
+    border: none;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.5);
+    font-size: 30px;
+  }
+
+
+  
