@@ -5,3 +5,8 @@ In order to run the application on local please go to the directiry `./server` a
 flask --app app run
 `
 
+In order to debug and run the application simoltaneusly please use the following command:
+
+`
+flask --debug run
+`

@@ -9,3 +9,11 @@ if __name__ == '__main__':
         if ser.in_waiting > 0:
             line = ser.readline().decode('utf-8').rstrip()
             print(line)
+
+# json result schema
+# {
+#     "light": 111,
+#     "temperature": 1234,
+#     "humidity": 1234,
+#     "co2": 1234
+# }
