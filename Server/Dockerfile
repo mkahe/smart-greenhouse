@@ -5,4 +5,4 @@ RUN pip install Flask-SQLAlchemy==3.0.2
 COPY . .
 RUN flask init-db
 EXPOSE 5000
-CMD flask run
+CMD flask run --host=0.0.0.0
