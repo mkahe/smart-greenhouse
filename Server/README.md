@@ -18,3 +18,17 @@ In order to debug and run the application simultaneusly please use the following
 `
 flask --debug run
 `
+
+## How to build in docker
+
+Go to the directiry `./server` and run the following command.
+
+`
+docker build -t smart-greenhouse .
+`
+
+Then run the docker container
+
+`
+docker run -p 5000:5000 smart-greenhouse -d 
+`

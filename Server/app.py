@@ -3,8 +3,12 @@ import json
 import random
 from datetime import datetime
 from services import repository
+import os
 
 app = Flask(__name__)
+
+app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get("DB_ADDR", "sqlite:///green-house.db")
+
 repository.init_db_context(app)
 
 @app.cli.command("init-db")

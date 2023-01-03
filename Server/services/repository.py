@@ -6,7 +6,7 @@ import sqlalchemy as sa
 db = SQLAlchemy()
 
 def init_db_context(app):
-    app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///green-house.db"
+    # app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///green-house.db"
     db.init_app(app)
 
 def createDatabase(app):
