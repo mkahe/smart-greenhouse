@@ -7,3 +7,6 @@ services:
       - 5000:5000
     volumes:
       - sqllite-instance:/Server/instance
+volumes:
+  sqllite-instance:
+    driver: local
