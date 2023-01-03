@@ -4,8 +4,10 @@ import random
 from datetime import datetime
 from services import repository
 import os
+from flask_cors import CORS
 
 app = Flask(__name__)
+CORS(app)
 
 app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get("DB_ADDR", "sqlite:///green-house.db")
 

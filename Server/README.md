@@ -21,7 +21,10 @@ flask --debug run
 
 ## How to build in docker
 
-Go to the directiry `./server` and run the following command.
+We have created the docker compose file. So, it is easier to run the docker compose directly with the command `docker compose up`.
+
+
+However, if you want to run it, go to the directiry `./server` and run the following command.
 
 `
 docker build -t smart-greenhouse .
