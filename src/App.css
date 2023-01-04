@@ -12,26 +12,64 @@
   text-align: center;
 }
 .gauge-container {
+  padding: 1rem;
+}
+.gauge {
   background-color: #282c34;
-  position: relative;
   border-radius: 20px;
 }
 
+.graph-container {
+  padding: 1rem;
+}
 .graph {
   background-color: #ffffff;
   border-radius: 20px;
+  height: 100%;
+}
+.chart {
+  background-color: rgba(197, 197, 197, 0.7);
+  border-radius: 10px;
+  margin: 0.5rem;
+  padding: 1rem;
+  max-width: 80%;
+}
+.lineChart {
+  /* background-color: red; */
+}
+.actuator1-container {
+  padding: 1rem;
 }
 .actuator1 {
   background-color: #d2e2ea;
   border-radius: 20px;
+  height: 100%;
+  width: 100%;
+}
+.actuator2-container {
+  padding: 1rem;
 }
 .actuator2 {
   background-color: #5c6366;
   border-radius: 20px;
+  height: 100%;
 }
-
+.circular-container {
+  max-width: 50px;
+}
 .gauge-header {
   background-color: black;
   padding: 0.5vw 1vw;
-  border-radius: 20px;
+  border-radius: 15px;
+}
+.rotate {
+  animation: rotation 1s infinite linear;
+}
+@keyframes rotation {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(359deg);
+  }
 }
