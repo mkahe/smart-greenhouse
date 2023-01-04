@@ -15,7 +15,7 @@ repository.init_db_context(app)
 
 @app.cli.command("init-db")
 def initializeDatabase():
-    print('\033[94m' + "Initializing the database")
+    print("Initializing the database")
     repository.createDatabase(app)
 
 @app.route('/')
@@ -45,8 +45,44 @@ def updateSensors():
     repository.updateSensorData(humidity, light, temperature, co2)
     return json.dumps({'success':True}), 200, {'ContentType':'application/json'}
 
-@app.route('/change-servo', methods=['POST'])
+@app.route('/servo', methods=['POST'])
 def changeServo():
     data = json.loads(request.data)
-    print(data['angle'])
+    if data is None:
+        return jsonify({ 'error': 'Missing input' }), 400
+    angle = int(data['angle'])
+    repository.updateServo(angle)
     return json.dumps({'success':True}), 200, {'ContentType':'application/json'}
+
+@app.route('/servo', methods=['GET'])
+def getServoData():
+    model = repository.getLastServoData()
+    return jsonify(model.json())
+
+@app.route('/hvac', methods=['POST'])
+def changeHvac():
+    data = json.loads(request.data)
+    if data is None:
+        return jsonify({ 'error': 'Missing input' }), 400
+    on = int(data['on'])
+    repository.updateHvac(on)
+    return json.dumps({'success':True}), 200, {'ContentType':'application/json'}
+
+@app.route('/light', methods=['POST'])
+def changeLight():
+    data = json.loads(request.data)
+    if data is None:
+        return jsonify({ 'error': 'Missing input' }), 400
+    on = int(data['on'])
+    repository.updateLight(on)
+    return json.dumps({'success':True}), 200, {'ContentType':'application/json'}
+
+@app.route('/light', methods=['GET'])
+def getLightData():
+    model = repository.getLastLightData()
+    return jsonify(model.json())
+
+@app.route('/hvac', methods=['GET'])
+def getHvacData():
+    model = repository.getLastHvacData()
+    return jsonify(model.json())

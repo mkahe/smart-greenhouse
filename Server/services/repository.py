@@ -6,13 +6,12 @@ import sqlalchemy as sa
 db = SQLAlchemy()
 
 def init_db_context(app):
-    # app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///green-house.db"
     db.init_app(app)
 
 def createDatabase(app):
     with app.app_context():
         db.create_all()
-    print('\033[94m' + "Database created")
+    print("Database created")
 
 class Sensor(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -23,7 +22,6 @@ class Sensor(db.Model):
     created = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
 
     def __init__(self, humidity, light, temperature, co2):
-        print('\033[94m' + "Sensor data: light %i humidity %i temperature %i co2 %i" %(light, humidity, temperature, co2))
         self.humidity = humidity
         self.light = light
         self.temperature = temperature
@@ -36,18 +34,90 @@ class Sensor(db.Model):
             'light': self.light,
             'temperature': self.temperature,
             'co2': self.co2,
-            "last-update": self.created
+            "lastUpdate": self.created
+        }
+
+class Servo(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    angle = db.Column(db.Integer, nullable=False)
+    created = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+
+    def __init__(self, angle):
+        self.angle = angle
+        self.created = datetime.utcnow()
+    
+    def json(self):
+        return {
+            'angle': self.angle,
+            'lastUpdate': self.created
+        }
+
+class Light(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    on = db.Column(db.Boolean, nullable=False)
+    created = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+
+    def __init__(self, on):
+        self.on = on
+        self.created = datetime.utcnow()
+    
+    def json(self):
+        return {
+            'on': self.on,
+            'lastUpdate': self.created
+        }
+
+class Hvac(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    on = db.Column(db.Boolean, nullable=False)
+    created = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+
+    def __init__(self, on):
+        self.on = on
+        self.created = datetime.utcnow()
+    
+    def json(self):
+        return {
+            'on': self.on,
+            'lastUpdate': self.created
         }
 
 def updateSensorData(humidity, light, temperature, co2):
-    sensor = Sensor(humidity, light, temperature, co2)
-    db.session.add(sensor)
+    model = Sensor(humidity, light, temperature, co2)
+    db.session.add(model)
     db.session.commit()
 
 def getLastSensorData():
-    sensor = db.first_or_404(db.select(Sensor).order_by(Sensor.created.desc()))
-    return sensor
+    model = db.first_or_404(db.select(Sensor).order_by(Sensor.created.desc()))
+    return model
 
 def getAllSensorData():
-    sensors = db.session.execute(db.select(Sensor).order_by(Sensor.created)).scalars()
-    return sensors
+    model = db.session.execute(db.select(Sensor).order_by(Sensor.created)).scalars()
+    return model
+
+def updateServo(angle):
+    model = Servo(angle)
+    db.session.add(model)
+    db.session.commit()
+
+def getLastServoData():
+    model = db.first_or_404(db.select(Servo).order_by(Servo.created.desc()))
+    return model
+
+def updateHvac(on):
+    model = Hvac(on)
+    db.session.add(model)
+    db.session.commit()
+
+def updateLight(on):
+    model = Light(on)
+    db.session.add(model)
+    db.session.commit()
+
+def getLastLightData():
+    model = db.first_or_404(db.select(Light).order_by(Light.created.desc()))
+    return model    
+
+def getLastHvacData():
+    model = db.first_or_404(db.select(Hvac).order_by(Hvac.created.desc()))
+    return model
