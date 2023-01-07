@@ -63,7 +63,7 @@ class Light(db.Model):
     
     def json(self):
         return {
-            'on': self.on,
+            'lightOn': self.on,
             'lastUpdate': self.created
         }
 
@@ -78,7 +78,7 @@ class Hvac(db.Model):
     
     def json(self):
         return {
-            'on': self.on,
+            'hvacOn': self.on,
             'lastUpdate': self.created
         }
 

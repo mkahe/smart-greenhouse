@@ -64,7 +64,7 @@ def changeHvac():
     data = json.loads(request.data)
     if data is None:
         return jsonify({ 'error': 'Missing input' }), 400
-    on = int(data['on'])
+    on = int(data['hvacOn'])
     repository.updateHvac(on)
     return json.dumps({'success':True}), 200, {'ContentType':'application/json'}
 
@@ -73,7 +73,7 @@ def changeLight():
     data = json.loads(request.data)
     if data is None:
         return jsonify({ 'error': 'Missing input' }), 400
-    on = int(data['on'])
+    on = int(data['lightOn'])
     repository.updateLight(on)
     return json.dumps({'success':True}), 200, {'ContentType':'application/json'}
 
