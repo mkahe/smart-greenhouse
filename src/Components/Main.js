@@ -28,7 +28,9 @@ export default function Main() {
   const [sensorData, setSensorData] = React.useState({});
   const [historyData, setHistoryData] = React.useState({});
   const [lightOn, setLightOn] = React.useState();
-  const [fanOn, setFanOn] = React.useState(false);
+  const [hvacOn, setHvacOn] = React.useState(false);
+  const [servo, setServo] = React.useState(20);
+
   // const [refresh, setRefresh] = React.useState(false);
   const getSensorData = () => {
     console.log("Sensor Data");
@@ -52,16 +54,35 @@ export default function Main() {
         console.log(lightOn)
       );
   };
+  const getFanStatus = () => {
+    fetch("http://86.50.229.208:5000/hvac")
+      .then((res) => res.json())
+      .then(
+        (data) => setLightOn(data.hvacOn),
+        console.log("initial fan is:"),
+        console.log(hvacOn)
+      );
+  };
+  const getServoStatus = () => {
+    fetch("http://86.50.229.208:5000/servo")
+      .then((res) => res.json())
+      .then(
+        (data) => setServo(data.angle),
+        console.log("initial servo is:"),
+        console.log(servo)
+      );
+  };
 
   React.useEffect(function () {
-    // const interval = setInterval(() => {
-    getSensorData();
-    getHistoryData();
-    console.log(lightOn);
-    // }, 5000);
+    const interval = setInterval(() => {
+      getSensorData();
+      getHistoryData();
+    }, 10000);
     getLightStatus();
+    getFanStatus();
+    getServoStatus();
 
-    // return () => clearInterval(interval);
+    return () => clearInterval(interval);
   }, []);
 
   const co2 = sensorData.co2;
@@ -69,13 +90,15 @@ export default function Main() {
   const light = sensorData.light;
   const temperature = sensorData.temperature;
   const lastUpdate = sensorData.lastUpdate;
-  const time = new Date(sensorData.lastUpdate).getTime();
+  // const time = new Date(sensorData.lastUpdate).getTime();
 
   function lightChange() {
-    console.log("the onclick light is:");
+    console.log("the onclick light before change is:");
     console.log(lightOn);
 
     setLightOn((prevLightOn) => !prevLightOn);
+    console.log("the onclick light after change is:");
+    console.log(lightOn);
     const requestOptions = {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -84,8 +107,35 @@ export default function Main() {
     fetch("http://86.50.229.208:5000/light", requestOptions).then((response) =>
       response.json()
     );
-    console.log("the light is");
-    console.log(lightOn);
+  }
+  function fanChange() {
+    console.log("the onclick fan before change is: ");
+    console.log(hvacOn);
+    setHvacOn((prevHvacOn) => !prevHvacOn);
+    console.log("the onclick fan after change is:");
+    console.log(hvacOn);
+    const requestOptions = {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ hvacOn: hvacOn }),
+    };
+    fetch("http://86.50.229.208:5000/hvac", requestOptions).then((response) =>
+      response.json()
+    );
+  }
+  function angleChange(value) {
+    setServo(value);
+    console.log("the servo after change is:");
+    console.log(servo);
+
+    const requestOptions = {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ angle: servo }),
+    };
+    fetch("http://86.50.229.208:5000/servo", requestOptions).then((response) =>
+      response.json()
+    );
   }
 
   return (
@@ -196,46 +246,44 @@ export default function Main() {
           <div className="actuator1 d-flex justify-content-center align-items-center ">
             <div className="col-6 position-relative">
               <div
-                onClick={() => lightChange()}
+                onClick={lightChange}
                 className={
-                  lightOn ? "circle border-green" : "circle border-red"
+                  // MastMal
+                  lightOn ? "circle border-red" : "circle border-green"
                 }
               >
                 {lightOn ? (
-                  <BsLightbulb
-                    color="#ffbc00"
-                    size={100}
-                    className="col-md-12 mt-3 icon"
-                  />
-                ) : (
                   <BsLightbulbOff
                     color="black"
                     size={100}
                     className="col-md-12 mt-3 icon"
                   />
+                ) : (
+                  <BsLightbulb
+                    color="yellow"
+                    size={100}
+                    className="col-md-12 mt-3 icon"
+                  />
                 )}
 
-                {/* <button
-                  className="btn text-light bg-dark m-3  "
-                  onClick={() => setLightOn((prevLightOn) => !prevLightOn)}
-                >
-                  {lightOn ? "Turn off the Light" : "Turn on the Light"}
-                </button> */}
                 <p className="m-3 text-dark icon-title">Light</p>
               </div>
             </div>
             <div className="col-6 position-relative">
               <div
-                className={fanOn ? "circle border-green" : "circle border-red"}
-                onClick={() => setFanOn((prevFanOn) => !prevFanOn)}
+                onClick={fanChange}
+                // MastMal
+                className={hvacOn ? "circle border-red" : "circle border-green"}
+                // onClick={() => setFanOn((prevFanOn) => !prevFanOn)}
               >
-                {fanOn ? (
+                {hvacOn ? (
                   <div className="col-md-12 mt-3">
-                    <FaFan color="#45b6fe" size={100} className="rotate" />
+                    {/* MastMal */}
+                    <FaFan color="black" size={100} />
                   </div>
                 ) : (
                   <div className="col-md-12 mt-3">
-                    <FaFan color="black" size={100} />
+                    <FaFan color="#45b6fe" size={100} className="rotate" />
                   </div>
                 )}
                 <p className="m-3 text-dark icon-title">Fan</p>
@@ -254,10 +302,11 @@ export default function Main() {
             <CircularSlider
               width={200}
               progressSize={15}
+              dataIndex={servo}
               knobSize={50}
               max={180}
               onChange={(value) => {
-                console.log(value);
+                angleChange(value);
               }}
             />
           </div>
