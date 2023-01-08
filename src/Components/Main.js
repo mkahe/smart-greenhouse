@@ -2,6 +2,10 @@ import React from "react";
 import GaugeChart from "react-gauge-chart";
 import { BsLightbulb, BsLightbulbOff } from "react-icons/bs";
 import { FaFan } from "react-icons/fa";
+import { RiTempColdLine } from "react-icons/ri";
+import { WiHumidity } from "react-icons/wi";
+import { MdLightMode } from "react-icons/md";
+import { SiOxygen } from "react-icons/si";
 import CircularSlider from "@fseehawer/react-circular-slider";
 
 // import LineChart from "./LineChart";
@@ -16,50 +20,6 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
-const data = [
-  {
-    name: "10 am",
-    uv: 4000,
-    pv: 2400,
-    amt: 2400,
-  },
-  {
-    name: "11 am",
-    uv: 3000,
-    pv: 1398,
-    amt: 2210,
-  },
-  {
-    name: "12 am",
-    uv: 2000,
-    pv: 9800,
-    amt: 2290,
-  },
-  {
-    name: "13 am",
-    uv: 2780,
-    pv: 3908,
-    amt: 2000,
-  },
-  {
-    name: "14 am",
-    uv: 1890,
-    pv: 4800,
-    amt: 2181,
-  },
-  {
-    name: "15 am",
-    uv: 2390,
-    pv: 3800,
-    amt: 2500,
-  },
-  {
-    name: "16 am",
-    uv: 3490,
-    pv: 4300,
-    amt: 2100,
-  },
-];
 
 export default function Main() {
   const gaugeStyle = {
@@ -67,17 +27,26 @@ export default function Main() {
   };
   const [sensorData, setSensorData] = React.useState({});
   const [historyData, setHistoryData] = React.useState({});
-  const [lightOn, setLightOn] = React.useState(false);
+  const [lightOn, setLightOn] = React.useState();
   const [fanOn, setFanOn] = React.useState(false);
+  // const [refresh, setRefresh] = React.useState(false);
 
   React.useEffect(function () {
+    // const interval = setInterval(() => {
+    //   console.log("refresh is working");
+    //   if (!refresh) {
+    //     setRefresh(true);
+    //   } else {
+    //     setRefresh(false);
+    //   }
+    // }, 10000);
     console.log("Effect ran");
     fetch("http://86.50.229.208:5000/sensor-data")
       .then((res) => res.json())
       .then((data) => setSensorData(data));
   }, []);
   React.useEffect(function () {
-    console.log("Effect ran");
+    console.log("history");
     fetch("http://86.50.229.208:5000/sensor-history")
       .then((res) => res.json())
       .then((data) => setHistoryData(data));
@@ -92,12 +61,51 @@ export default function Main() {
   const temperature = sensorData.temperature;
   const lastUpdate = sensorData.lastUpdate;
   const time = new Date(sensorData.lastUpdate).getTime();
-  console.log(time);
+  // console.log(time);
+  React.useEffect(function () {
+    fetch("http://86.50.229.208:5000/light")
+      .then((res) => res.json())
+      .then((data) => setLightOn(data.lightOn));
+    console.log("the light is");
+    console.log(lightOn);
+  }, []);
+
+  React.useEffect(() => {
+    // POST request using fetch inside useEffect React hook
+    const requestOptions = {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ title: "React Hooks POST Request Example" }),
+    };
+    fetch("http://86.50.229.208:5000/light", requestOptions)
+      .then((response) => response.json())
+      .then((data) => setLightOn(data.lightOn));
+    console.log("testing on the click of btn");
+    // empty dependency array means this effect will only run once (like componentDidMount in classes)
+  }, [lightOn]);
+
+  function lightChange() {
+    console.log("am i working?");
+    setLightOn((prevLightOn) => !prevLightOn);
+  }
+  // React.useEffect(()=>{
+  //   fetch(`http://86.50.229.208:5000/light`, {
+  //     method: "POST",
+  //     headers: {
+  //       Accept: "application/json",
+  //       "Content-Type": "application/json",
+  //     },
+  //     body: JSON.stringify({
+  //       is_archived: true,
+  //     }),
+  //   });
+  // },[]);
+
   return (
     <div className="d-flex justify-content-center align-items-center main">
       <div className="container row   ">
-        <div className="col-md-6 gauge-container">
-          <div className="gauge d-flex flex-wrap  ">
+        <div className="col-md-6 gauge-container  ">
+          <div className="gauge d-flex flex-wrap bx-shadow ">
             <div className="col-12 mt-4 justify-content-center align-items-center d-flex">
               <p className="gauge-header ">{lastUpdate}</p>
             </div>
@@ -111,7 +119,10 @@ export default function Main() {
                 style={gaugeStyle}
                 colors={["#45b6fe", "#45b6fe"]}
               />
-              <p className="gauge-title col-12">Humidity</p>
+              <p className="gauge-title col-12">
+                <WiHumidity size={30} color={"yellow"} />
+                Humidity
+              </p>
             </div>
             <div className="col-md-6 ">
               <GaugeChart
@@ -123,7 +134,10 @@ export default function Main() {
                 formatTextValue={(value) => value + " °C"}
                 colors={["#45b6fe", "#ff0000"]}
               />
-              <p className="gauge-title col-12">Temperature</p>
+              <p className="gauge-title col-12">
+                <RiTempColdLine size={30} color={"yellow"} />
+                Temperature
+              </p>
             </div>
             <div className="col-md-6 ">
               <GaugeChart
@@ -134,7 +148,12 @@ export default function Main() {
                 style={gaugeStyle}
                 colors={["#000000", "#ffffff"]}
               />
-              <p className="gauge-title col-12">Light</p>
+              <p className="gauge-title col-12">
+                <span className="p-1">
+                  <MdLightMode size={30} color={"yellow"} />
+                </span>
+                Light
+              </p>
             </div>
             <div className="col-md-6 ">
               <GaugeChart
@@ -144,11 +163,16 @@ export default function Main() {
                 percent={co2 / 100}
                 style={gaugeStyle}
               />
-              <p className="gauge-title col-12">CO2</p>
+              <p className="gauge-title col-12">
+                <span className="p-1">
+                  <SiOxygen color={"yellow"} size={20} />
+                </span>
+                CO2
+              </p>
             </div>
           </div>
         </div>
-        <div className="col-md-6 graph-container">
+        <div className="col-md-6 graph-container bx-shadow">
           <div className="graph d-flex flex-column justify-content-center align-items-center  ">
             <p className="gauge-header  ">Last 24Hours History</p>
 
@@ -183,45 +207,58 @@ export default function Main() {
         {/* SEPEHR CODE  */}
         <div className="col-md-6 actuator1-container ">
           <div className="actuator1 d-flex justify-content-center align-items-center ">
-            <div className="col-6">
-              {lightOn ? (
-                <BsLightbulb
-                  color="#ffbc00"
-                  size={100}
-                  className="col-md-12 mt-3"
-                />
-              ) : (
-                <BsLightbulbOff
-                  color="black"
-                  size={100}
-                  className="col-md-12 mt-3"
-                />
-              )}
-
-              <button
-                className="btn text-light bg-dark m-3  "
-                onClick={() => setLightOn((prevLightOn) => !prevLightOn)}
+            <div className="col-6 position-relative">
+              <div
+                className={
+                  lightOn ? "circle border-green a" : "circle border-red"
+                }
+                onClick={() => lightChange()}
               >
-                {lightOn ? "Turn off the Light" : "Turn on the Light"}
-              </button>
-            </div>
-            <div className="col-6">
-              {fanOn ? (
-                <div className="col-md-12 mt-3">
-                  <FaFan color="black" size={100} className="rotate" />
-                </div>
-              ) : (
-                <div className="col-md-12 mt-3">
-                  <FaFan color="black" size={100} />
-                </div>
-              )}
+                {lightOn ? (
+                  <BsLightbulb
+                    color="#ffbc00"
+                    size={100}
+                    className="col-md-12 mt-3 icon"
+                  />
+                ) : (
+                  <BsLightbulbOff
+                    color="black"
+                    size={100}
+                    className="col-md-12 mt-3 icon"
+                  />
+                )}
 
-              <button
-                className="btn text-light bg-dark m-3  "
+                {/* <button
+                  className="btn text-light bg-dark m-3  "
+                  onClick={() => setLightOn((prevLightOn) => !prevLightOn)}
+                >
+                  {lightOn ? "Turn off the Light" : "Turn on the Light"}
+                </button> */}
+                <p className="m-3 text-dark icon-title">Light</p>
+              </div>
+            </div>
+            <div className="col-6 position-relative">
+              <div
+                className={fanOn ? "circle border-green" : "circle border-red"}
                 onClick={() => setFanOn((prevFanOn) => !prevFanOn)}
               >
-                {fanOn ? "Turn off the Fan" : "Turn on the Fan"}
-              </button>
+                {fanOn ? (
+                  <div className="col-md-12 mt-3">
+                    <FaFan color="#45b6fe" size={100} className="rotate" />
+                  </div>
+                ) : (
+                  <div className="col-md-12 mt-3">
+                    <FaFan color="black" size={100} />
+                  </div>
+                )}
+                <p className="m-3 text-dark icon-title">Fan</p>
+                {/* <button
+                  className="btn text-light bg-dark m-3  "
+                  onClick={() => setFanOn((prevFanOn) => !prevFanOn)}
+                >
+                  {fanOn ? "Turn off the Fan" : "Turn on the Fan"}
+                </button> */}
+              </div>
             </div>
           </div>
         </div>

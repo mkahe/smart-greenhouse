@@ -11,6 +11,35 @@
 .App {
   text-align: center;
 }
+.bx-shadow {
+  /* box-shadow: 0 0 0 1px rgba(255, 255, 255, 1); */
+  position: relative;
+}
+.bx-shadow::after {
+  /* border: 10px solid white; */
+  position: absolute;
+  content: "";
+  top: 15px;
+  left: 0;
+  right: 0;
+  z-index: -1;
+  overflow: visible;
+  height: 100%;
+  /* width: 100%; */
+  transform: scale(1) translateZ(0);
+  filter: blur(15px);
+  background: linear-gradient(0.25turn, #3f87a6, #ebf8e1, #f69d3c);
+  background-size: 200% 200%;
+  animation: animateGlow 1.25s linear infinite;
+}
+@keyframes animateGlow {
+  0% {
+    background-position: 0% 50%;
+  }
+  100% {
+    background-position: 200% 50%;
+  }
+}
 .gauge-container {
   padding: 1rem;
 }
@@ -45,6 +74,32 @@
   border-radius: 20px;
   height: 100%;
   width: 100%;
+}
+
+.circle {
+  /* padding: 0.5rem; */
+  width: 12vw;
+  height: 12vw;
+  border: 6px solid;
+  border-radius: 100%;
+  margin-left: auto;
+  margin-right: auto;
+  /* z-index: 0; */
+  box-shadow: 0 0.5rem 0.5rem 0.5rem #979797;
+  cursor: pointer;
+}
+.border-green {
+  border: 6px solid green;
+}
+.border-red {
+  border: 6px solid red;
+}
+.icon {
+  z-index: 1;
+}
+.icon-title {
+  font-size: large;
+  font-weight: bold;
 }
 .actuator2-container {
   padding: 1rem;
