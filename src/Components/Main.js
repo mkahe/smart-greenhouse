@@ -30,76 +30,63 @@ export default function Main() {
   const [lightOn, setLightOn] = React.useState();
   const [fanOn, setFanOn] = React.useState(false);
   // const [refresh, setRefresh] = React.useState(false);
-
-  React.useEffect(function () {
-    // const interval = setInterval(() => {
-    //   console.log("refresh is working");
-    //   if (!refresh) {
-    //     setRefresh(true);
-    //   } else {
-    //     setRefresh(false);
-    //   }
-    // }, 10000);
-    console.log("Effect ran");
+  const getSensorData = () => {
+    console.log("Sensor Data");
     fetch("http://86.50.229.208:5000/sensor-data")
       .then((res) => res.json())
       .then((data) => setSensorData(data));
-  }, []);
-  React.useEffect(function () {
-    console.log("history");
+  };
+  const getHistoryData = () => {
+    console.log("history Data");
     fetch("http://86.50.229.208:5000/sensor-history")
       .then((res) => res.json())
       .then((data) => setHistoryData(data));
+    console.log(historyData);
+  };
+  const getLightStatus = () => {
+    fetch("http://86.50.229.208:5000/light")
+      .then((res) => res.json())
+      .then(
+        (data) => setLightOn(data.lightOn),
+        console.log("initial ligh is:"),
+        console.log(lightOn)
+      );
+  };
+
+  React.useEffect(function () {
+    // const interval = setInterval(() => {
+    getSensorData();
+    getHistoryData();
+    console.log(lightOn);
+    // }, 5000);
+    getLightStatus();
+
+    // return () => clearInterval(interval);
   }, []);
-  // console.log(historyData);
-  // console.log("!");
 
   const co2 = sensorData.co2;
   const humidity = sensorData.humidity;
   const light = sensorData.light;
-
   const temperature = sensorData.temperature;
   const lastUpdate = sensorData.lastUpdate;
   const time = new Date(sensorData.lastUpdate).getTime();
-  // console.log(time);
-  React.useEffect(function () {
-    fetch("http://86.50.229.208:5000/light")
-      .then((res) => res.json())
-      .then((data) => setLightOn(data.lightOn));
-    console.log("the light is");
-    console.log(lightOn);
-  }, []);
 
-  React.useEffect(() => {
-    // POST request using fetch inside useEffect React hook
+  function lightChange() {
+    console.log("the onclick light is:");
+    console.log(lightOn);
+
+    setLightOn((prevLightOn) => !prevLightOn);
     const requestOptions = {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ title: "React Hooks POST Request Example" }),
+      body: JSON.stringify({ lightOn: lightOn }),
     };
-    fetch("http://86.50.229.208:5000/light", requestOptions)
-      .then((response) => response.json())
-      .then((data) => setLightOn(data.lightOn));
-    console.log("testing on the click of btn");
-    // empty dependency array means this effect will only run once (like componentDidMount in classes)
-  }, [lightOn]);
-
-  function lightChange() {
-    console.log("am i working?");
-    setLightOn((prevLightOn) => !prevLightOn);
+    fetch("http://86.50.229.208:5000/light", requestOptions).then((response) =>
+      response.json()
+    );
+    console.log("the light is");
+    console.log(lightOn);
   }
-  // React.useEffect(()=>{
-  //   fetch(`http://86.50.229.208:5000/light`, {
-  //     method: "POST",
-  //     headers: {
-  //       Accept: "application/json",
-  //       "Content-Type": "application/json",
-  //     },
-  //     body: JSON.stringify({
-  //       is_archived: true,
-  //     }),
-  //   });
-  // },[]);
 
   return (
     <div className="d-flex justify-content-center align-items-center main">
@@ -204,15 +191,15 @@ export default function Main() {
             </div>
           </div>
         </div>
-        {/* SEPEHR CODE  */}
+
         <div className="col-md-6 actuator1-container ">
           <div className="actuator1 d-flex justify-content-center align-items-center ">
             <div className="col-6 position-relative">
               <div
-                className={
-                  lightOn ? "circle border-green a" : "circle border-red"
-                }
                 onClick={() => lightChange()}
+                className={
+                  lightOn ? "circle border-green" : "circle border-red"
+                }
               >
                 {lightOn ? (
                   <BsLightbulb
