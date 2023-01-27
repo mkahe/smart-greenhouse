@@ -1,0 +1,130 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+.main {
+  color: white;
+  background-color: #000000;
+  min-height: 100vh;
+}
+.App {
+  text-align: center;
+}
+.bx-shadow {
+  /* box-shadow: 0 0 0 1px rgba(255, 255, 255, 1); */
+  position: relative;
+}
+.bx-shadow::after {
+  /* border: 10px solid white; */
+  position: absolute;
+  content: "";
+  top: 15px;
+  left: 0;
+  right: 0;
+  z-index: -1;
+  overflow: visible;
+  height: 100%;
+  /* width: 100%; */
+  transform: scale(1) translateZ(0);
+  filter: blur(15px);
+  background: linear-gradient(0.25turn, #3f87a6, #ebf8e1, #f69d3c);
+  background-size: 200% 200%;
+  animation: animateGlow 1.25s linear infinite;
+}
+@keyframes animateGlow {
+  0% {
+    background-position: 0% 50%;
+  }
+  100% {
+    background-position: 200% 50%;
+  }
+}
+.gauge-container {
+  padding: 1rem;
+}
+.gauge {
+  background-color: #282c34;
+  border-radius: 20px;
+}
+
+.graph-container {
+  padding: 1rem;
+}
+.graph {
+  background-color: #ffffff;
+  border-radius: 20px;
+  height: 100%;
+}
+.chart {
+  background-color: rgba(197, 197, 197, 0.7);
+  border-radius: 10px;
+  margin: 0.5rem;
+  padding: 1rem;
+  max-width: 80%;
+}
+.lineChart {
+  /* background-color: red; */
+}
+.actuator1-container {
+  padding: 1rem;
+}
+.actuator1 {
+  background-color: #d2e2ea;
+  border-radius: 20px;
+  height: 100%;
+  width: 100%;
+}
+
+.circle {
+  /* padding: 0.5rem; */
+  width: 10vw;
+  height: 10vw;
+  border: 6px solid;
+  border-radius: 100%;
+  margin-left: auto;
+  margin-right: auto;
+  /* z-index: 0; */
+  box-shadow: 0 0.5rem 0.5rem 0.5rem #979797;
+  cursor: pointer;
+}
+.border-green {
+  border: 6px solid green;
+}
+.border-red {
+  border: 6px solid red;
+}
+.icon {
+  z-index: 1;
+}
+.icon-title {
+  font-size: large;
+  font-weight: bold;
+}
+.actuator2-container {
+  padding: 1rem;
+}
+.actuator2 {
+  background-color: #5c6366;
+  border-radius: 20px;
+  height: 100%;
+}
+.circular-container {
+  max-width: 50px;
+}
+.gauge-header {
+  background-color: black;
+  padding: 0.5vw 1vw;
+  border-radius: 15px;
+}
+.rotate {
+  animation: rotation 1s infinite linear;
+}
+@keyframes rotation {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(359deg);
+  }
+}
